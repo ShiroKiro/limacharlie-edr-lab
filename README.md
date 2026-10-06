@@ -213,4 +213,4 @@ limacharlie-edr-lab/
 
 ---
 
-**Author:** Oleg Tuboltsev · [LinkedIn](https://www.linkedin.com/in/YOUR-LINKEDIN) · Kankaanpää, Finland
+**Author:** Oleg Tuboltsev · [LinkedIn](https://www.linkedin.com/in/oleh-tuboltsev) · Kankaanpää, Finland
