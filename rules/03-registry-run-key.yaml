@@ -1,0 +1,28 @@
+# Registry Run Key persistence
+# MITRE ATT&CK: T1547.001 - Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+#
+# Detects writes to autostart Run/RunOnce registry keys. HKCU is written by the
+# OS as the native kernel path \REGISTRY\USER\<SID>\...\CurrentVersion\Run\...,
+# so the rule matches on the path tail (covers both HKLM and HKU hives).
+#
+# Note: REGISTRY_WRITE is NOT in the default Windows exfil profile and must be
+# enabled in Sensors > Event Collection. The raw registry stream is high-volume
+# (svchost, WMI tracing, DeliveryOptimization), so scoping to Run/RunOnce is what
+# makes the detection actionable.
+#
+# Tested: TP (write to ...\CurrentVersion\Run\<value>) fires;
+#         TN (write to HKCU\Software\LabTest\Config) silent.
+
+detect:
+  event: REGISTRY_WRITE
+  op: and
+  rules:
+    - op: is windows
+    - op: matches
+      path: event/REGISTRY_KEY
+      re: (?i)\\CurrentVersion\\Run(Once)?\\
+      case sensitive: false
+
+respond:
+  - action: report
+    name: Registry Run Key persistence (T1547.001)

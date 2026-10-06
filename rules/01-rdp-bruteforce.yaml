@@ -1,0 +1,16 @@
+# RDP/Logon Brute-Force Detection
+# MITRE ATT&CK: T1110.001 - Brute Force: Password Guessing
+# Logic: 5+ failed logons (EventID 4625) within 60 seconds on a Windows sensor
+# Tested: 6 failed logons -> fires; 1 failed logon -> silent
+
+event: WEL
+op: is windows
+with events:
+  count: 5
+  op: is
+  path: event/EVENT/System/EventID
+  value: '4625'
+  within: 60
+
+- action: report
+  name: RDP/Logon Brute-Force - 5+ failed logons in 60s (T1110.001)

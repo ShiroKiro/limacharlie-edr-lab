@@ -1,0 +1,16 @@
+event: NEW_PROCESS
+op: and
+rules:
+  - op: is windows
+  - case sensitive: false
+    op: ends with
+    path: event/FILE_PATH
+    value: powershell.exe
+  - op: matches
+    path: event/COMMAND_LINE
+    re: >-
+      (?i)(-enc|-encodedcommand|-nop|-noprofile|-w hidden|-windowstyle hidden|-
+      exec bypass|-executionpolicy bypass|downloadstring|frombase64string|iex)
+
+- action: report
+  name: Suspicious PowerShell flags (T1059.001)

@@ -1,0 +1,25 @@
+# LSASS memory access - possible credential dumping
+# MITRE ATT&CK: T1003.001 - OS Credential Dumping: LSASS Memory
+#
+# SENSITIVE_PROCESS_ACCESS is emitted by the LimaCharlie sensor only for
+# processes accessing lsass.exe on Windows, so this event type is itself a
+# credential-access signal. The target filter below is an explicit, self-
+# documenting safeguard.
+#
+# Note: on a host with LSASS PPL enabled (RunAsPPL != 0) the access is blocked
+# before an event is generated. This rule fires on hosts where LSASS access
+# succeeds (PPL disabled or bypassed).
+
+detect:
+  event: SENSITIVE_PROCESS_ACCESS
+  op: and
+  rules:
+    - op: is windows
+    - op: ends with
+      path: event/TARGET/FILE_PATH
+      value: lsass.exe
+      case sensitive: false
+
+respond:
+  - action: report
+    name: LSASS memory access - possible credential dumping (T1003.001)

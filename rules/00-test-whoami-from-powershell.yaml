@@ -1,0 +1,21 @@
+# Rule: LAB-TEST - whoami spawned by PowerShell
+# MITRE ATT&CK: T1033 - System Owner/User Discovery
+# Tested: TP (powershell -> whoami) fires, TN (cmd -> whoami) silent
+
+detect:
+  event: NEW_PROCESS
+  op: and
+  rules:
+    - op: is windows
+    - op: ends with
+      path: event/FILE_PATH
+      value: whoami.exe
+      case sensitive: false
+    - op: ends with
+      path: event/PARENT/FILE_PATH
+      value: powershell.exe
+      case sensitive: false
+
+respond:
+  - action: report
+    name: LAB-TEST - whoami spawned by PowerShell (T1033)
